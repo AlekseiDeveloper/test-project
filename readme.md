@@ -1,8 +1,6 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
-
-<p align="center">
+<h2 align="center">
 О том как запустить
-</p>
+</h2>
 
 ## About Laravel
 
