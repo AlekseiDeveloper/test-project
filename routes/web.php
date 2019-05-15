@@ -11,27 +11,33 @@
 |
 */
 
-Route::prefix('article')->group(function () {
 
-    //Route::get('profile', 'UserController@show')->middleware('auth');
-
+Route::prefix('/article')->group(function () {
+    Route::get('/{id}','Site\Article\ArticleController@show')->name('show-article');
 
 });
 
-Route::get('/','ArticleController@index')->name('main');
+Route::group([
+    "prefix" => "/cabinet",
+    "namespace" => "Cabinet",
+    "as" => "cabinet.",
+    "middleware" => ["auth"]
+],function () {
+    Route::resource('articles', 'Article\ArticleResourceController')->except([
+        'destroy'
+    ]);
+});
 
-Route::match(['get', 'post'], '/add-article','IndexController@add')->name('add_article');
+Route::group([
+    "prefix" => "/admin",
+    "namespace" => "Admin",
+    "as" => "admin.",
+    "middleware" => ["auth" =>"can:admin.panel"]
+],function () {
 
-Route::match(['get', 'post'], '/create-article/{id}','IndexController@create')->name('create_article');
+    Route::resource('articles', 'ArticleResourceController');
+});
 
-Route::match(['get', 'post'], '/update-article/{id}','IndexController@update')->name('update_article');
-
-Route::delete('/delete-article/{id}', 'IndexController@delete')->name('delete_article');
-
-
-/*Route::get('/', function () {
-    return view('index');
-});*/
 
 Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/','Site\MainController@index')->name('main');
